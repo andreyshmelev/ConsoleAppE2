@@ -4,58 +4,38 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        using (StreamReader file = new StreamReader("C:\\Users\\Brux\\Downloads\\testE2\\tests\\01"))
-
+       // using (StreamReader file = new StreamReader("C:\\Users\\Brux\\Downloads\\testE2\\tests\\01"))
         {
-
-            var inputDatasetsCount = int.Parse(file.ReadLine());
+            var inputDatasetsCount = int.Parse(Console.ReadLine());
+        
             for (int i = 0; i < inputDatasetsCount; i++)
             {
-                if (string.IsNullOrEmpty(file.ReadLine()))
+                if (string.IsNullOrEmpty(Console.ReadLine()))
                 {
-                    var inputSet = file.ReadLine().Split(" ");
+                    var inputSet = Console.ReadLine().Split(" ");
 
                     var thread_count = int.Parse(inputSet[0]);
                     var job_counter = int.Parse(inputSet[1]);
-                    Console.WriteLine("thread_count: " + thread_count);
-                    Console.WriteLine("job_counter: " + job_counter);
-                    
-                    int lasttime = 0;
 
-                    var resultCollection = new int[job_counter];
+                    var threadsTimeEnding = new int[thread_count];
 
-
-                    int howmanyskip = 0;
                     for (int j = 0; j < job_counter; j++)
                     {
-                        var task = file.ReadLine().Split(" ");
+                        var task = Console.ReadLine().Split(" ");
 
-                        int currentStartTime = int.Parse(task[0]);
-                        int currentPeriod = int.Parse(task[1]);
+                        var indexofFreeThread = Array.IndexOf(threadsTimeEnding, threadsTimeEnding.Min());
+
+                        var a = int.Parse(task[0]);
+                        var b = threadsTimeEnding[indexofFreeThread];
 
 
-                        // если есть свободные потоки на начало 
-                        if (thread_count>0)
-                        {
-                            thread_count--;
-                            resultCollection[j] = currentStartTime + currentPeriod ;
-                        }
-                        else // если нет свободных потоков на начало. то ждем того который максимально рано закончит, то есть выбираем минимум времени
-                        {
-
-                            int minimumEndTimeForAnyThread = resultCollection.Skip(howmanyskip).Take(j - howmanyskip).Min(); // вот этот максимально рано закончит
-                            Console.WriteLine("освободился поток в : " + minimumEndTimeForAnyThread);
-                            Console.WriteLine("howmanyskip : " + howmanyskip);
-                            resultCollection[j] = minimumEndTimeForAnyThread + currentPeriod;
-                            howmanyskip++;
-                        }
-
+                        threadsTimeEnding[indexofFreeThread] = (a>=b?a:b) + int.Parse(task[1]);
+                        Console.Write(threadsTimeEnding[indexofFreeThread] + " ");
                     }
-                    Console.WriteLine(String.Join(" ", resultCollection));
-
-                    Console.WriteLine("\n");
+                    Console.WriteLine("");
                 }
             }
         }
     }
 }
+
